@@ -1,0 +1,22 @@
+name: Publish to npm
+
+# Publishes the package when a version tag is pushed (e.g. v0.1.0).
+# Requires an NPM_TOKEN repo secret with publish rights to the @socheli scope.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
